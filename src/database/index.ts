@@ -11,6 +11,7 @@ db.exec(`
     log_channel_id TEXT,
     quarantine_role_id TEXT,
     max_warnings INTEGER DEFAULT 3,
+    member_role_id TEXT,
     enabled INTEGER DEFAULT 1
   );
 
@@ -89,6 +90,19 @@ db.exec(`
     action TEXT DEFAULT 'kick',
     log_channel_id TEXT
   );
+
+  CREATE TABLE IF NOT EXISTS autorole_settings (
+    guild_id TEXT PRIMARY KEY,
+    enabled INTEGER DEFAULT 0,
+    role_id TEXT
+  );
 `);
+
+// Migrations
+try {
+  db.prepare('ALTER TABLE guild_settings ADD COLUMN member_role_id TEXT').run();
+} catch (error) {
+  // Column likely already exists or table issue, ignore
+}
 
 export default db;
