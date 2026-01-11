@@ -32,8 +32,6 @@ db.exec(`
     count INTEGER DEFAULT 0,
     PRIMARY KEY (guild_id, user_id)
   );
-<<<<<<< Updated upstream
-=======
 
   CREATE TABLE IF NOT EXISTS antibot_settings (
     guild_id TEXT PRIMARY KEY,
@@ -91,7 +89,6 @@ db.exec(`
     action TEXT DEFAULT 'kick',
     log_channel_id TEXT
   );
->>>>>>> Stashed changes
 `);
 
 export default db;
