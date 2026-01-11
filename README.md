@@ -1,5 +1,343 @@
 # 🛡️ Antinuke Bot
 
+## English
+
+Powerful Discord server protection system against mass deletions, raids, and violations with full support for Russian and English languages.
+
+### Description and Features
+
+**Core protection modules:**
+- **Anti-Nuke**: monitors audit logs, warns, applies quarantine role, whitelist, logs actions.
+- **Anti-Bot**: blocks unauthorized bots, whitelist, instant reaction, detailed logs.
+- **Anti-Link**: blocks Discord invites and suspicious links, whitelist channels, actions (delete, warn, mute), auto‑deletes offending messages.
+- **Anti-Spam**: configurable message limit and time window, auto‑deletes spam, actions (delete, mute, kick), configurable mute duration, real‑time tracking.
+- **Anti-Webhook**: controls webhook creation, whitelist, instant reaction, detailed logs.
+- **Anti-Raid**: detects mass joins, configurable thresholds, auto‑kick/ban, protects against coordinated attacks.
+
+**Additional features:**
+- Dual‑language support (Russian & English)
+- Beautiful UI with intuitive embed panels
+- Secure admin‑only access
+- Fast setup via modal windows
+- Toggle modules with single buttons
+- Centralized menu for all protection modules
+- SQLite database for reliable settings storage
+
+---
+
+## 🚀 Installation Guide
+
+### Requirements:
+- **Node.js** v18+ 
+- **npm** (bundled with Node.js) 
+- Discord Bot Token ([get it here](https://discord.com/developers/applications))
+
+### Step 1: Clone the project
+
+```bash
+git clone <repository-url>
+cd Antinuke
+```
+
+### Step 2: Install dependencies
+
+```bash
+npm install
+```
+
+### Step 3: Configure environment
+
+1. Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+2. Edit `.env` and fill in required values:
+```env
+DISCORD_TOKEN=your_bot_token
+CLIENT_ID=your_bot_id
+DEFAULT_LANGUAGE=ru
+```
+
+### Step 4: Set up Discord Application
+
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications)
+2. Create or select an application
+3. Enable **Privileged Gateway Intents** (Presence, Server Members, Message Content)
+4. Generate an invite URL with scopes `bot` and `applications.commands` and appropriate permissions (Administrator or minimal required)
+5. Invite the bot to your server
+
+### Step 5: Run the bot
+
+- Development mode:
+```bash
+npm run dev
+```
+- Production mode:
+```bash
+npm start
+```
+
+### Step 6: Initial server configuration
+
+1. Use `/antinuke` to open the control panel
+2. Set log channel, quarantine role, warning thresholds, whitelist, groups, etc.
+3. Enable additional protection modules via the "Server Protection System" menu
+
+---
+
+## 📁 Project Structure
+
+```
+Antinuke/
+├── src/
+│   ├── components/       # UI components (embeds, modals, menus)
+│   ├── database/         # SQLite initialization
+│   ├── localization/     # Translation files (ru.json, en.json)
+│   ├── logic/            # Protection module logic
+│   ├── utils/            # Helper functions
+│   ├── config.ts         # Configuration loader
+│   └── index.ts          # Main bot entry point
+├── .env                  # Environment variables (not committed)
+├── .env.example          # Example env file
+├── package.json          # Dependencies and scripts
+├── tsconfig.json         # TypeScript config
+└── README.md             # This file
+```
+
+---
+
+## 🛠️ Technologies
+
+- **Discord.js v14** – Discord API library
+- **TypeScript** – Typed JavaScript
+- **better-sqlite3** – Synchronous SQLite driver
+- **dotenv** – Environment variable management
+- **tsx** – TypeScript execution engine
+
+---
+
+## 📝 License
+
+MIT License
+
+---
+
+## 💡 Support
+
+If you encounter issues:
+1. Ensure all dependencies are installed
+2. Verify token and IDs are correct
+3. Check required intents are enabled
+4. Make sure the bot has Administrator permissions
+
+---
+
+## ⚠️ Important Notes
+
+- The bot requires **Administrator** rights for full functionality
+- Commands are admin‑only
+- Database is created automatically on first run
+- Create a dedicated log channel
+- Regularly back up `database.db`
+
+---
+
+## Русский
+
+# 🛡️ Antinuke Bot
+
+Мощная система защиты Discord‑сервера от массовых удалений, рейдов и нарушений с полной поддержкой русского и английского языков.
+
+## 📋 Описание и функции бота
+
+### Основные модули защиты:
+
+#### 🔒 **Anti‑Nuke**
+- Защита от массового удаления каналов, ролей и банов:
+  - Мониторинг подозрительных действий в аудит‑логах
+  - Система предупреждений с настраиваемым порогом
+  - Автоматическое применение роли карантина
+  - Белый список пользователей и групп ролей
+  - Логирование всех действий в отдельный канал
+
+#### 🤖 **Anti‑Bot**
+- Контроль добавления ботов на сервер:
+  - Блокировка неавторизованных ботов (кик/бан)
+  - Белый список разрешённых ботов
+  - Мгновенное реагирование при добавлении
+  - Детальные логи с информацией о боте
+
+#### 🔗 **Anti‑Link**
+- Блокировка Discord‑приглашений и подозрительных ссылок:
+  - Определение и удаление Discord‑invite‑ссылок
+  - Фильтрация других URL
+  - Белый список каналов, где ссылки разрешены
+  - Гибкие действия: удаление, предупреждение, мут
+  - Автоматическое удаление нарушающих сообщений
+
+#### 💬 **Anti‑Spam**
+- Защита от спама сообщениями:
+  - Настраиваемый лимит сообщений и временное окно
+  - Автоматическое удаление спама
+  - Действия: удаление, мут, кик
+  - Настраиваемая длительность мута
+  - Отслеживание частоты сообщений в реальном времени
+
+#### 🪝 **Anti‑Webhook**
+- Контроль создания вебхуков:
+  - Автоматическое удаление неавторизованных вебхуков
+  - Белый список пользователей с правами на вебхуки
+  - Мгновенная реакция на создание
+  - Подробные логи с информацией о вебхуке
+
+#### ⚔️ **Anti‑Raid**
+- Защита от массовых заходов (рейдов):
+  - Обнаружение аномального числа входов
+  - Настраиваемый порог входов и временное окно
+  - Автоматические действия: кик/бан новых пользователей
+  - Защита от координированных атак
+
+### Дополнительные возможности:
+
+- 🌐 **Двуязычная поддержка**: Полная локализация на русском и английском
+- 🎨 **Красивый UI**: Интуитивные embed‑панели для всех настроек
+- 🔐 **Безопасность**: Доступ только для администраторов
+- ⚡ **Быстрая настройка**: Удобные модальные окна для всех параметров
+- 🟢/🔴 **Переключатели**: Включение/выключение каждого модуля одной кнопкой
+- 📊 **Централизованное меню**: Единая точка доступа ко всем модулям защиты
+- 💾 **SQLite база данных**: Надёжное хранение настроек
+
+---
+
+## 🚀 Гайд по установке
+
+### Требования:
+- **Node.js** версии 18 или выше
+- **npm** (устанавливается вместе с Node.js)
+- Discord Bot Token ([получить здесь](https://discord.com/developers/applications))
+
+### Шаг 1: Клонирование проекта
+
+```bash
+git clone <url-репозитория>
+cd Antinuke
+```
+
+### Шаг 2: Установка зависимостей
+
+```bash
+npm install
+```
+
+### Шаг 3: Настройка окружения
+
+1. Скопируйте файл `.env.example` в `.env`:
+```bash
+cp .env.example .env
+```
+2. Откройте `.env` и заполните необходимые данные:
+```env
+DISCORD_TOKEN=ваш_токен_бота
+CLIENT_ID=id_вашего_бота
+DEFAULT_LANGUAGE=ru
+```
+
+### Шаг 4: Настройка Discord Application
+
+1. Перейдите на [Discord Developer Portal](https://discord.com/developers/applications)
+2. Создайте новое приложение или выберите существующее
+3. Включите **Privileged Gateway Intents**:
+   - Presence Intent
+   - Server Members Intent
+   - Message Content Intent
+4. Перейдите в раздел **OAuth2 → URL Generator**:
+   - Выберите scope: `bot`, `applications.commands`
+   - Выберите права:
+     - Administrator (или минимально: Manage Channels, Kick Members, Ban Members, Manage Roles, View Audit Log, Manage Webhooks)
+5. Скопируйте сгенерированную ссылку и добавьте бота на сервер
+
+### Шаг 5: Запуск бота
+
+- Режим разработки:
+```bash
+npm run dev
+```
+- Продакшн режим:
+```bash
+npm start
+```
+
+### Шаг 6: Первичная настройка на сервере
+
+1. После добавления бота на сервер, используйте команду `/antinuke`
+2. Настройте основные параметры:
+   - **Канал логов**: Куда будут отправляться уведомления
+   - **Роль карантина**: Роль для нарушителей
+   - **Количество предупреждений**: После скольких предупреждений применять карантин
+   - **Белый список**: Пользователи, которые игнорируются системой
+   - **Группы**: Роли, которые игнорируются системой
+3. Настройте дополнительные модули защиты через меню "Система защиты сервера"
+
+---
+
+## 📁 Структура проекта
+
+```
+Antinuke/
+├── src/
+│   ├── components/       # UI компоненты (embeds, modals, menus)
+│   ├── database/         # Инициализация SQLite базы данных
+│   ├── localization/     # Файлы переводов (ru.json, en.json)
+│   ├── logic/            # Логика модулей защиты
+│   ├── utils/            # Вспомогательные функции
+│   ├── config.ts         # Загрузка конфигурации
+│   └── index.ts          # Главный файл бота
+├── .env                  # Переменные окружения (не коммитится)
+├── .env.example          # Пример конфигурации
+├── package.json          # Зависимости и скрипты
+├── tsconfig.json         # Конфигурация TypeScript
+└── README.md             # Этот файл
+```
+
+---
+
+## 🛠️ Технологии
+
+- **[Discord.js v14](https://discord.js.org/)** – библиотека для работы с Discord API
+- **[TypeScript](https://www.typescriptlang.org/)** – типизированный JavaScript
+- **[better-sqlite3](https://github.com/WiseLibs/better-sqlite3)** – синхронная работа с SQLite
+- **[dotenv](https://github.com/motdotla/dotenv)** – управление переменными окружения
+- **[tsx](https://github.com/privatenumber/tsx)** – TypeScript execution engine
+
+---
+
+## 📝 Лицензия
+
+MIT License
+
+---
+
+## 💡 Поддержка
+
+Если у вас возникли проблемы или вопросы:
+1. Проверьте, что все зависимости установлены
+2. Убедитесь, что токен и ID бота указаны правильно
+3. Проверьте, что у бота включены все необходимые Intents
+4. Убедитесь, что у бота есть права администратора
+
+---
+
+## ⚠️ Важные примечания
+
+- Бот требует прав **Администратора** для полноценной работы всех модулей
+- Все команды доступны только пользователям с правами администратора
+- База данных создаётся автоматически при первом запуске
+- Рекомендуется создать отдельный канал для логов бота
+- Регулярно делайте резервные копии файла `database.db`
+
+---
+
+**Разработано с ❤️ для защиты Discord‑серверов**
 Мощная система защиты Discord-сервера от массовых удалений, рейдов и нарушений с полной поддержкой русского и английского языков.
 
 ## 📋 Описание и функции бота
