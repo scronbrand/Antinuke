@@ -65,7 +65,7 @@ db.exec(`
     max_messages INTEGER DEFAULT 5,
     time_window INTEGER DEFAULT 5,
     action TEXT DEFAULT 'mute',
-    mute_duration INTEGER DEFAULT 300,
+    mute_duration INTEGER DEFAULT 1800,
     log_channel_id TEXT
   );
 

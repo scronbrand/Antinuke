@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Message, EmbedBuilder } from 'discord.js';
 import db from '../database/index.js';
 
 const inviteRegex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+/gi;
@@ -22,13 +22,20 @@ export async function checkMessage(message: Message) {
     if (hasInvite || hasLink) {
         // Take action
         if (settings.action === 'delete' || settings.action === 'warn') {
-            await message.delete().catch(console.error);
+            await message.delete().catch(err => {
+                if (err.code !== 10008) console.error(err);
+            });
         }
 
         if (settings.action === 'warn' || settings.action === 'mute') {
             if (message.channel.isTextBased() && 'send' in message.channel) {
-                const warning = await message.channel.send(`⚠️ ${message.author}, ссылки запрещены на этом сервере!`).catch(() => null);
-                setTimeout(() => warning?.delete().catch(() => { }), 5000);
+                const warningEmbed = new EmbedBuilder()
+                    .setTitle('— • Авто заглушения antinuke')
+                    .setDescription(`${message.author}, ссылки запрещены на этом сервере!`)
+                    .setColor(0xff0000)
+                    .setTimestamp();
+                const warning = await message.channel.send({ embeds: [warningEmbed] }).catch(() => null);
+                setTimeout(() => warning?.delete().catch(() => { }), 60000);
             }
         }
 
@@ -43,7 +50,18 @@ export async function checkMessage(message: Message) {
         if (settings.log_channel_id) {
             const logChannel = await message.guild.channels.fetch(settings.log_channel_id).catch(() => null);
             if (logChannel?.isTextBased()) {
-                logChannel.send(`🔗 **Anti-Link**: ${message.author.tag} отправил ссылку в ${message.channel}.`);
+                const linkType = hasInvite ? 'Discord-приглашение' : 'ссылку';
+                const logEmbed = new EmbedBuilder()
+                    .setTitle('— • Anti-Link')
+                    .setDescription(`${message.author.tag} отправил ${linkType}`)
+                    .addFields(
+                        { name: 'Пользователь', value: `<@${message.author.id}>`, inline: true },
+                        { name: 'Канал', value: `<#${message.channel.id}>`, inline: true },
+                        { name: 'Сообщение', value: message.content.substring(0, 100), inline: false }
+                    )
+                    .setColor(0xff0000)
+                    .setTimestamp();
+                logChannel.send({ embeds: [logEmbed] });
             }
         }
     }

@@ -1,4 +1,4 @@
-import { Guild, AuditLogEvent } from 'discord.js';
+import { Guild, AuditLogEvent, EmbedBuilder } from 'discord.js';
 import db from '../database/index.js';
 
 export async function checkWebhook(guild: Guild, channelId: string) {
@@ -24,15 +24,25 @@ export async function checkWebhook(guild: Guild, channelId: string) {
         if (webhooks) {
             for (const webhook of webhooks.values()) {
                 await webhook.delete('Anti-Webhook: Unauthorized webhook creation').catch(console.error);
-            }
-        }
-    }
 
-    // Log
-    if (settings.log_channel_id) {
-        const logChannel = await guild.channels.fetch(settings.log_channel_id).catch(() => null);
-        if (logChannel?.isTextBased()) {
-            logChannel.send(`🪝 **Anti-Webhook**: Вебхук был удален. Создатель: <@${webhookLog.executorId}>`);
+                // Log
+                if (settings.log_channel_id) {
+                    const logChannel = await guild.channels.fetch(settings.log_channel_id).catch(() => null);
+                    if (logChannel?.isTextBased()) {
+                        const logEmbed = new EmbedBuilder()
+                            .setTitle('— • Anti-Webhook')
+                            .setDescription('Неавторизованный вебхук был удален')
+                            .addFields(
+                                { name: 'Вебхук', value: webhook.name || 'Без имени', inline: true },
+                                { name: 'Канал', value: `<#${channelId}>`, inline: true },
+                                { name: 'Создатель', value: `<@${webhookLog.executorId}>`, inline: true }
+                            )
+                            .setColor(0xff0000)
+                            .setTimestamp();
+                        logChannel.send({ embeds: [logEmbed] });
+                    }
+                }
+            }
         }
     }
 }

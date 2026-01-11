@@ -1,4 +1,4 @@
-import { Guild, GuildMember } from 'discord.js';
+import { GuildMember, EmbedBuilder } from 'discord.js';
 import db from '../database/index.js';
 
 export async function checkBotAddition(member: GuildMember) {
@@ -22,9 +22,18 @@ export async function checkBotAddition(member: GuildMember) {
 
     // Log
     if (settings.log_channel_id) {
-        const logChannel = await guild.channels.fetch(settings.log_channel_id).catch(() => null);
+        const logChannel = await member.guild.channels.fetch(settings.log_channel_id).catch(() => null);
         if (logChannel?.isTextBased()) {
-            logChannel.send(`🤖 **Anti-Bot**: Бот ${member.user.tag} был удален с сервера (не в белом списке).`);
+            const logEmbed = new EmbedBuilder()
+                .setTitle('— • Anti-Bot')
+                .setDescription(`Неавторизованный бот был ${settings.action === 'kick' ? 'кикнут' : 'забанен'}`)
+                .addFields(
+                    { name: 'Бот', value: `<@${member.id}>`, inline: true },
+                    { name: 'Действие', value: settings.action === 'kick' ? 'Кик' : 'Бан', inline: true }
+                )
+                .setColor(0xff0000)
+                .setTimestamp();
+            logChannel.send({ embeds: [logEmbed] });
         }
     }
 }

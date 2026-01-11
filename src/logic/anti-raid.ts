@@ -1,4 +1,4 @@
-import { GuildMember } from 'discord.js';
+import { GuildMember, EmbedBuilder } from 'discord.js';
 import db from '../database/index.js';
 
 const joinTimestamps = new Map<string, number[]>();
@@ -34,11 +34,20 @@ export async function checkRaid(member: GuildMember) {
             await member.ban({ reason: 'Anti-Raid: Potential raid detected' }).catch(console.error);
         }
 
-        // Log warning
+        // Log
         if (settings.log_channel_id) {
-            const logChannel = await guild.channels.fetch(settings.log_channel_id).catch(() => null);
+            const logChannel = await member.guild.channels.fetch(settings.log_channel_id).catch(() => null);
             if (logChannel?.isTextBased()) {
-                logChannel.send(`⚔️ **Anti-Raid**: Обнаружен возможный рейд! ${recentJoins.length} участников присоединились за ${settings.time_window}с. Новые участники будут удалены.`);
+                const logEmbed = new EmbedBuilder()
+                    .setTitle('— • Anti-Raid')
+                    .setDescription('Обнаружен рейд! Применены защитные меры')
+                    .addFields(
+                        { name: 'Входов', value: `${recentJoins.length} за ${settings.time_window}с`, inline: true },
+                        { name: 'Действие', value: settings.action === 'kick' ? 'Кик' : 'Бан', inline: true }
+                    )
+                    .setColor(0xff0000)
+                    .setTimestamp();
+                logChannel.send({ embeds: [logEmbed] });
             }
         }
     }
