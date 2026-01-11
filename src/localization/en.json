@@ -4,6 +4,7 @@
         "description": "Here you **can** view the **configuration** of the system",
         "main_info": "**Main Information:**",
         "quarantine_role": "• Quarantine Role: {role}",
+        "member_role": "• Member Role: {role}",
         "log_channel": "• Notification Channel: {channel}",
         "max_warnings": "• Max Warnings: **{count}**",
         "groups_title": "┃ **Groups:**",
@@ -26,6 +27,10 @@
             "ban_role": {
                 "label": "Ban Role",
                 "description": "Role given as a 'Quarantine' punishment"
+            },
+            "member_role": {
+                "label": "Member Role",
+                "description": "Main role for members (informational)"
             },
             "warnings": {
                 "label": "Max Warnings",

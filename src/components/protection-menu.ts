@@ -11,7 +11,8 @@ export function createProtectionMenu(guild: Guild) {
             { name: '🔗 Anti-Link', value: 'Блокировка приглашений и подозрительных ссылок', inline: false },
             { name: '💬 Anti-Spam', value: 'Защита от спама сообщениями', inline: false },
             { name: '🪝 Anti-Webhook', value: 'Контроль создания вебхуков', inline: false },
-            { name: '⚔️ Anti-Raid', value: 'Защита от массовых заходов (рейдов)', inline: false }
+            { name: '⚔️ Anti-Raid', value: 'Защита от массовых заходов (рейдов)', inline: false },
+            { name: '🎭 Auto-Role', value: 'Автоматическая выдача ролей новым участникам', inline: false }
         )
         .setColor(0x2b2d31);
 
@@ -48,7 +49,12 @@ export function createProtectionMenu(guild: Guild) {
                 .setLabel('Anti-Raid')
                 .setDescription('Защита от массовых заходов')
                 .setValue('antiraid')
-                .setEmoji('⚔️')
+                .setEmoji('⚔️'),
+            new StringSelectMenuOptionBuilder()
+                .setLabel('Auto-Role')
+                .setDescription('Авто-выдача ролей')
+                .setValue('autorole')
+                .setEmoji('🎭')
         );
 
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select);

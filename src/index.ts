@@ -12,6 +12,7 @@ import { createAntiLinkEmbed } from './components/antilink-ui.js';
 import { createAntiSpamEmbed } from './components/antispam-ui.js';
 import { createAntiWebhookEmbed } from './components/antiwebhook-ui.js';
 import { createAntiRaidEmbed } from './components/antiraid-ui.js';
+import { createAutoroleEmbed } from './components/autorole-ui.js';
 import { createProtectionMenu } from './components/protection-menu.js';
 import {
     createWhitelistModal, createAuditModal, createBanRoleModal, createWarningsModal, createGroupsModal,
@@ -19,7 +20,8 @@ import {
     createAntiLinkWhitelistModal, createAntiLinkActionModal, createAntiLinkLogModal,
     createAntiSpamThresholdModal, createAntiSpamActionModal, createAntiSpamLogModal,
     createAntiWebhookWhitelistModal, createAntiWebhookLogModal,
-    createAntiRaidThresholdModal, createAntiRaidActionModal, createAntiRaidLogModal
+    createAntiRaidThresholdModal, createAntiRaidActionModal, createAntiRaidLogModal,
+    createAutoroleModal, createMemberRoleModal
 } from './components/modals.js';
 import { getTranslation } from './localization/index.js';
 import db from './database/index.js';
@@ -81,9 +83,12 @@ client.on(Events.GuildAuditLogEntryCreate, async (auditLog, guild) => {
     }
 });
 
+import { checkAutorole } from './logic/autorole.js';
+
 client.on(Events.GuildMemberAdd, async (member) => {
     await checkBotAddition(member);
     await checkRaid(member);
+    await checkAutorole(member);
 });
 
 client.on(Events.MessageCreate, async (message) => {
@@ -135,7 +140,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 'antilink': createAntiLinkEmbed(interaction.guild!),
                 'antispam': createAntiSpamEmbed(interaction.guild!),
                 'antiwebhook': createAntiWebhookEmbed(interaction.guild!),
-                'antiraid': createAntiRaidEmbed(interaction.guild!)
+                'antiraid': createAntiRaidEmbed(interaction.guild!),
+                'autorole': createAutoroleEmbed(interaction.guild!)
             };
             await interaction.reply(responses[module] || { content: `Модуль ${module} в разработке.`, ephemeral: true });
         }
@@ -147,6 +153,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 'whitelist': createWhitelistModal(interaction.guild!),
                 'audit': createAuditModal(interaction.guild!),
                 'ban_role': createBanRoleModal(interaction.guild!),
+                'member_role': createMemberRoleModal(interaction.guild!),
                 'warnings': createWarningsModal(interaction.guild!),
                 'groups': createGroupsModal(interaction.guild!)
             };
@@ -206,6 +213,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
             };
             await interaction.showModal(modals[action]);
         }
+
+        // Auto-Role select
+        if (interaction.customId === 'autorole_select') {
+            await interaction.showModal(createAutoroleModal());
+        }
     }
 
     if (interaction.isModalSubmit()) {
@@ -252,6 +264,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
             responseEmbed = new EmbedBuilder()
                 .setTitle('— • Роль карантина установлена')
                 .setDescription(`Роль карантина: <@&${roleId}>`)
+                .setColor(0x00ff00)
+                .setTimestamp();
+            refreshFunction = () => createAntinukeEmbed(interaction.guild!);
+        }
+
+        if (interaction.customId === 'member_role_modal') {
+            const roleId = interaction.fields.getTextInputValue('role_id');
+            db.prepare('INSERT INTO guild_settings (guild_id, member_role_id) VALUES (?, ?) ON CONFLICT(guild_id) DO UPDATE SET member_role_id = ?').run(guildId, roleId, roleId);
+            responseEmbed = new EmbedBuilder()
+                .setTitle('— • Роль участника установлена')
+                .setDescription(`Роль участника: <@&${roleId}>`)
                 .setColor(0x00ff00)
                 .setTimestamp();
             refreshFunction = () => createAntinukeEmbed(interaction.guild!);
@@ -538,6 +561,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
             refreshFunction = () => createAntiRaidEmbed(interaction.guild!);
         }
 
+        if (interaction.customId === 'autorole_modal') {
+            const roleId = interaction.fields.getTextInputValue('role_id');
+            db.prepare('INSERT INTO autorole_settings (guild_id, role_id) VALUES (?, ?) ON CONFLICT(guild_id) DO UPDATE SET role_id = ?').run(guildId, roleId, roleId);
+            responseEmbed = new EmbedBuilder()
+                .setTitle('— • Роль автовыдачи установлена')
+                .setDescription(`Роль автовыдачи: <@&${roleId}>`)
+                .setColor(0x00ff00)
+                .setTimestamp();
+            refreshFunction = () => createAutoroleEmbed(interaction.guild!);
+        }
+
         if (responseEmbed) {
             await interaction.reply({ embeds: [responseEmbed] });
         }
@@ -556,7 +590,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
             'toggle_antilink': { table: 'antilink_settings', refreshFunc: () => createAntiLinkEmbed(interaction.guild!) },
             'toggle_antispam': { table: 'antispam_settings', refreshFunc: () => createAntiSpamEmbed(interaction.guild!) },
             'toggle_antiwebhook': { table: 'antiwebhook_settings', refreshFunc: () => createAntiWebhookEmbed(interaction.guild!) },
-            'toggle_antiraid': { table: 'antiraid_settings', refreshFunc: () => createAntiRaidEmbed(interaction.guild!) }
+            'toggle_antiraid': { table: 'antiraid_settings', refreshFunc: () => createAntiRaidEmbed(interaction.guild!) },
+            'toggle_autorole': { table: 'autorole_settings', refreshFunc: () => createAutoroleEmbed(interaction.guild!) }
         };
 
         if (toggleHandlers[interaction.customId]) {

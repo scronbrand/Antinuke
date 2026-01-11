@@ -1,6 +1,24 @@
 import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, Guild } from 'discord.js';
 import { getTranslation } from '../localization/index.js';
 
+export function createAutoroleModal() {
+    const modal = new ModalBuilder()
+        .setCustomId('autorole_modal')
+        .setTitle('Настройка Auto-Role');
+
+    const roleIdInput = new TextInputBuilder()
+        .setCustomId('role_id')
+        .setLabel('ID Роли')
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true)
+        .setPlaceholder('Введите ID роли');
+
+    const row = new ActionRowBuilder<TextInputBuilder>().addComponents(roleIdInput);
+    modal.addComponents(row);
+
+    return modal;
+}
+
 export function createWhitelistModal(guild: Guild) {
     const modal = new ModalBuilder()
         .setCustomId('whitelist_modal')
@@ -39,6 +57,23 @@ export function createBanRoleModal(guild: Guild) {
     const modal = new ModalBuilder()
         .setCustomId('ban_role_modal')
         .setTitle(getTranslation(guild.id, 'antinuke.menu.ban_role.label'));
+
+    const roleIdInput = new TextInputBuilder()
+        .setCustomId('role_id')
+        .setLabel(getTranslation(guild.id, 'antinuke.modals.role_id_label'))
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true);
+
+    const row = new ActionRowBuilder<TextInputBuilder>().addComponents(roleIdInput);
+    modal.addComponents(row);
+
+    return modal;
+}
+
+export function createMemberRoleModal(guild: Guild) {
+    const modal = new ModalBuilder()
+        .setCustomId('member_role_modal')
+        .setTitle(getTranslation(guild.id, 'antinuke.menu.member_role.label'));
 
     const roleIdInput = new TextInputBuilder()
         .setCustomId('role_id')

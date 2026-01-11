@@ -3,7 +3,7 @@ import { getTranslation } from '../localization/index.js';
 import db from '../database/index.js';
 
 export function createAntinukeEmbed(guild: Guild) {
-    const settings = db.prepare('SELECT log_channel_id, quarantine_role_id, max_warnings, enabled FROM guild_settings WHERE guild_id = ?').get(guild.id) as any || { max_warnings: 3, enabled: 1 };
+    const settings = db.prepare('SELECT log_channel_id, quarantine_role_id, member_role_id, max_warnings, enabled FROM guild_settings WHERE guild_id = ?').get(guild.id) as any || { max_warnings: 3, enabled: 1 };
     const whitelist = db.prepare('SELECT user_id FROM whitelist WHERE guild_id = ? LIMIT 10').all(guild.id) as { user_id: string }[];
     const groups = db.prepare('SELECT role_id FROM groups WHERE guild_id = ? LIMIT 10').all(guild.id) as { role_id: string }[];
 
@@ -14,6 +14,7 @@ export function createAntinukeEmbed(guild: Guild) {
             {
                 name: getTranslation(guild.id, 'antinuke.main_info'), value: [
                     getTranslation(guild.id, 'antinuke.quarantine_role', { role: settings.quarantine_role_id ? `<@&${settings.quarantine_role_id}>` : '@None' }),
+                    getTranslation(guild.id, 'antinuke.member_role', { role: settings.member_role_id ? `<@&${settings.member_role_id}>` : '@None' }),
                     getTranslation(guild.id, 'antinuke.log_channel', { channel: settings.log_channel_id ? `<#${settings.log_channel_id}>` : '#None' }),
                     getTranslation(guild.id, 'antinuke.max_warnings', { count: settings.max_warnings.toString() })
                 ].join('\n'), inline: false
@@ -48,6 +49,11 @@ export function createAntinukeEmbed(guild: Guild) {
                 .setDescription(getTranslation(guild.id, 'antinuke.menu.ban_role.description'))
                 .setValue('ban_role')
                 .setEmoji('🚫'),
+            new StringSelectMenuOptionBuilder()
+                .setLabel(getTranslation(guild.id, 'antinuke.menu.member_role.label'))
+                .setDescription(getTranslation(guild.id, 'antinuke.menu.member_role.description'))
+                .setValue('member_role')
+                .setEmoji('👤'),
             new StringSelectMenuOptionBuilder()
                 .setLabel(getTranslation(guild.id, 'antinuke.menu.warnings.label'))
                 .setDescription(getTranslation(guild.id, 'antinuke.menu.warnings.description'))
