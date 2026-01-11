@@ -1,0 +1,54 @@
+{
+    "antinuke": {
+        "title": "— • Anti-Nuke System — viperr",
+        "description": "Here you **can** view the **configuration** of the system",
+        "main_info": "**Main Information:**",
+        "quarantine_role": "• Quarantine Role: {role}",
+        "log_channel": "• Notification Channel: {channel}",
+        "max_warnings": "• Max Warnings: **{count}**",
+        "groups_title": "┃ **Groups:**",
+        "whitelist_title": "┃ **Whitelist:**",
+        "select_action": "Select what you want to do...",
+        "back_to_protection": "Back to protection choice",
+        "menu": {
+            "groups": {
+                "label": "Groups",
+                "description": "Add, change, or show group information"
+            },
+            "whitelist": {
+                "label": "Whitelist",
+                "description": "Add or remove users from the whitelist"
+            },
+            "audit": {
+                "label": "Audit Channel",
+                "description": "Where notifications will be sent"
+            },
+            "ban_role": {
+                "label": "Ban Role",
+                "description": "Role given as a 'Quarantine' punishment"
+            },
+            "warnings": {
+                "label": "Max Warnings",
+                "description": "After reaching the limit, quarantine will be applied"
+            }
+        },
+        "modals": {
+            "whitelist_title": "Whitelist Management",
+            "user_id_label": "User ID",
+            "role_id_label": "Role ID",
+            "channel_id_label": "Channel ID (number)",
+            "warnings_label": "Max Warnings (1-10)"
+        },
+        "messages": {
+            "no_permission": "You do not have enough permissions to use this menu (Administrator required).",
+            "whitelist_added": "User {user} added to whitelist.",
+            "whitelist_removed": "User {user} removed from whitelist.",
+            "audit_set": "Audit channel set to {channel}.",
+            "ban_role_set": "Quarantine role set to {role}.",
+            "warnings_set": "Max warnings set to {count}.",
+            "group_added": "Role {role} added to groups.",
+            "group_removed": "Role {role} removed from groups.",
+            "invalid_input": "Invalid input. Please check the data."
+        }
+    }
+}
