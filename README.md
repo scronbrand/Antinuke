@@ -35,7 +35,7 @@ Powerful Discord server protection system against mass deletions, raids, and vio
 ### Step 1: Clone the project
 
 ```bash
-git clone <repository-url>
+git clone [https://github.com/scronbrand/Antinuke]
 cd Antinuke
 ```
 
@@ -219,7 +219,7 @@ If you encounter issues:
 ### Шаг 1: Клонирование проекта
 
 ```bash
-git clone <url-репозитория>
+git clone [https://github.com/scronbrand/Antinuke]
 cd Antinuke
 ```
 
